@@ -10,8 +10,8 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { CreateProductDto } from './dto/CreateProduct.dto';
-import { ProductService } from './products.service';
+import { CreateProductDto } from '../dto/CreateProduct.dto';
+import { ProductService } from '../services/products.service';
 
 @Controller('products')
 export class ProductsController {
