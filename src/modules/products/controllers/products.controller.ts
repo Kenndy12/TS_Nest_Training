@@ -11,46 +11,56 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { CreateProductDto } from '../dto/CreateProduct.dto';
+import { UpdateProductDto } from '../dto/UpdateProduct.tdo';
 import { ProductService } from '../services/products.service';
 
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productService: ProductService) {}
+
   @Post()
   @HttpCode(200)
   @UsePipes(ValidationPipe)
-  addProduct(@Body() payload: CreateProductDto): {
-    profile: object;
-    response: string;
-  } {
-    const data = this.productService.insertProduct(payload);
-    return { profile: data, response: 'Successfully added user' };
+  async addProduct(@Body() payload: CreateProductDto) {
+    return {
+      data: await this.productService.insertProduct(payload),
+      response: 'Successfully added the product',
+    };
   }
 
   @Get()
-  getAllProducts() {
-    const data = this.productService.getAllProducts();
-    return data;
+  async getAllProducts() {
+    return {
+      data: await this.productService.getAllProducts(),
+      response: `Successfully retrieved the list of products`,
+    };
   }
 
   @Get('/:id')
-  getProduct(@Param('id') id: string): Object {
-    return this.productService.getProduct(id);
+  async getProduct(@Param('id') id: number) {
+    return {
+      data: await this.productService.getProduct(id),
+      response: `Successfully retrived the product`,
+    };
   }
 
   @Patch('/:id')
-  updateProduct(
-    @Param('id') id: string,
-    @Body('name') name: string,
-    @Body('description') description: string,
-    @Body('price') price: number,
+  @UsePipes(ValidationPipe)
+  async updateProduct(
+    @Param('id') id: number,
+    @Body() payload: UpdateProductDto,
   ) {
-    return this.productService.updateProduct(id, name, description, price);
+    return {
+      data: await this.productService.updateProduct(id, payload),
+      response: 'Successfully updated the product',
+    };
   }
 
   @Delete('/:id')
-  deleteProduct(@Param('id') id: string) {
-    this.productService.deleteProduct(id);
-    return null;
+  async deleteProduct(@Param('id') id: number) {
+    return {
+      data: await this.productService.deleteProduct(id),
+      response: `Successfully deleted the product`,
+    };
   }
 }
